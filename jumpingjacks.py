@@ -6,7 +6,7 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 # 1. SETUP - Configure the Pose Landmarker
-model_path = 'pose_landmarker.task'
+model_path = 'pose_landmarker_lite.task'
 
 BaseOptions = mp.tasks.BaseOptions
 PoseLandmarker = mp.tasks.vision.PoseLandmarker
