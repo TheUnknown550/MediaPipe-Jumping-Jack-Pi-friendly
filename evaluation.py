@@ -30,6 +30,7 @@ import pandas as pd
 # Paths & configuration
 # -----------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+ACTIVITY_DIR = PROJECT_ROOT / "activity-mediapipe"
 DATA_FOLDER = PROJECT_ROOT / "data"
 GROUND_TRUTH_TXT = PROJECT_ROOT / "evaluation_requirement" / "ground_truth.txt"
 RUN_ID = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -40,7 +41,8 @@ TABLES_FOLDER = OUTPUT_ROOT / "tables"
 
 # Model registry (task + raw tflite)
 MODEL_PATHS: Dict[str, Path] = {
-    "Pose Landmarker Lite (task)": "pose_landmarker_lite.task",
+    "Pose Landmarker Lite (task)": ACTIVITY_DIR / "pose_landmarker_lite.task",
+    "Pose Landmarker Lite (tflite)": ACTIVITY_DIR / "pose_landmarker_lite.tflite",
 }
 
 # Pose topology for quick drawing (same as run_pose_tflite.py)
