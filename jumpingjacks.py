@@ -54,6 +54,7 @@ count = 0
 stage = "down"
 prev_time = time.time()
 last_latency_ms = None  # last measured end-to-end detection latency
+leg_ratio_hist = []  # keep a short history to see if legs actually move
 
 with PoseLandmarker.create_from_options(options) as landmarker:
     while cap.isOpened():
@@ -95,15 +96,34 @@ with PoseLandmarker.create_from_options(options) as landmarker:
             l_sh, r_sh = landmarks[11], landmarks[12]
             l_el, r_el = landmarks[13], landmarks[14]
             l_hi, r_hi = landmarks[23], landmarks[24]
+            l_ank, r_ank = landmarks[27], landmarks[28]  # ankles for leg spread
 
             # "Armpit" angles: hip -> shoulder -> elbow
             l_angle = get_angle(l_hi, l_sh, l_el)
             r_angle = get_angle(r_hi, r_sh, r_el)
 
-            if l_angle > 140 and r_angle > 140:
+            # ---- LEG SPREAD RATIO ----
+            # Use ankle distance relative to shoulder width to decide if legs are open.
+            shoulder_w = np.linalg.norm(
+                np.array([l_sh.x, l_sh.y]) - np.array([r_sh.x, r_sh.y])
+            )
+            ankle_w = np.linalg.norm(
+                np.array([l_ank.x, l_ank.y]) - np.array([r_ank.x, r_ank.y])
+            )
+            leg_ratio = ankle_w / (shoulder_w + 1e-6)
+            leg_open = leg_ratio > 0.8  # heuristic threshold: >80% of shoulder width
+
+            # Track recent leg ratios to detect movement variability
+            leg_ratio_hist.append(leg_ratio)
+            if len(leg_ratio_hist) > 30:  # roughly 1s window at 30 fps
+                leg_ratio_hist.pop(0)
+            legs_moving = (max(leg_ratio_hist) - min(leg_ratio_hist)) > 0.15
+
+            # Count only when arms are up AND legs are open; finish when both reset
+            if l_angle > 140 and r_angle > 140 and leg_open:
                 stage = "up"
 
-            if l_angle < 50 and r_angle < 50 and stage == "up":
+            if l_angle < 50 and r_angle < 50 and not leg_open and stage == "up":
                 stage = "down"
                 count += 1
                 print(f"Jumping Jack Count: {count}")
@@ -122,6 +142,24 @@ with PoseLandmarker.create_from_options(options) as landmarker:
             cv2.FONT_HERSHEY_SIMPLEX,
             1,
             (0, 255, 0),
+            2,
+        )
+        cv2.putText(
+            frame,
+            f"Legs: {'OPEN' if result.pose_landmarks and leg_open else 'CLOSED'} ({leg_ratio:.2f}x)",
+            (20, 90),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.9,
+            (0, 200, 255) if leg_open else (0, 0, 255),
+            2,
+        )
+        cv2.putText(
+            frame,
+            f"Legs moving: {'YES' if legs_moving else 'NO'}",
+            (20, 125),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.9,
+            (0, 200, 0) if legs_moving else (0, 0, 255),
             2,
         )
 
