@@ -53,6 +53,7 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 count = 0
 stage = "down"
 prev_time = time.time()
+last_latency_ms = None  # last measured end-to-end detection latency
 
 with PoseLandmarker.create_from_options(options) as landmarker:
     while cap.isOpened():
@@ -66,8 +67,10 @@ with PoseLandmarker.create_from_options(options) as landmarker:
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
         timestamp_ms = int(time.time() * 1000)
 
-        # Detect landmarks
+        # Detect landmarks and measure latency
+        detect_start = time.perf_counter()
         result = landmarker.detect_for_video(mp_image, timestamp_ms)
+        last_latency_ms = (time.perf_counter() - detect_start) * 1000
 
         if result.pose_landmarks:
             landmarks = result.pose_landmarks[0]
@@ -110,9 +113,11 @@ with PoseLandmarker.create_from_options(options) as landmarker:
         fps = 1 / max(now - prev_time, 1e-6)
         prev_time = now
 
+        latency_text = f"{int(last_latency_ms)}ms" if last_latency_ms is not None else "--"
+
         cv2.putText(
             frame,
-            f"REPS: {count}  FPS: {int(fps)}",
+            f"REPS: {count}  FPS: {int(fps)}  LAT: {latency_text}",
             (20, 50),
             cv2.FONT_HERSHEY_SIMPLEX,
             1,
@@ -120,7 +125,7 @@ with PoseLandmarker.create_from_options(options) as landmarker:
             2,
         )
 
-        cv2.imshow("MediaPipe Tasks Pi Counter", frame)
+        cv2.imshow("MediaPipe Task  s Pi Counter", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
