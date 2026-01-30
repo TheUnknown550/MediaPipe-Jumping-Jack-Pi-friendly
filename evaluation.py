@@ -40,7 +40,7 @@ TABLES_FOLDER = OUTPUT_ROOT / "tables"
 
 # Model registry (task + raw tflite)
 MODEL_PATHS: Dict[str, Path] = {
-    "Pose Landmarker Lite (task)": PROJECT_ROOT / "activity-mediapipe" / "pose_landmarker_lite.task",
+    "Pose Landmarker Lite (task)": "pose_landmarker_lite.task",
 }
 
 # Pose topology for quick drawing (same as run_pose_tflite.py)

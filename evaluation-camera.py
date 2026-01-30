@@ -30,8 +30,7 @@ EXPORT_FOLDER = OUTPUT_ROOT / "videos"
 TABLES_FOLDER = OUTPUT_ROOT / "tables"
 
 MODEL_PATHS: Dict[str, Path] = {
-    "Pose Landmarker Lite (task)": PROJECT_ROOT / "pose_landmarker_lite.task",
-    "Pose Landmarker Lite (tflite)": PROJECT_ROOT / "pose_landmarker_lite.tflite",
+    "Pose Landmarker Lite (task)": "pose_landmarker_lite.task",
 }
 
 # Simple pose topology for drawing
