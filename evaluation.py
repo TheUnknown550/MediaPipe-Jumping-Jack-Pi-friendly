@@ -29,8 +29,8 @@ import pandas as pd
 # -----------------------------
 # Paths & configuration
 # -----------------------------
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-ACTIVITY_DIR = PROJECT_ROOT / "activity-mediapipe"
+# All paths are rooted at the project folder that contains this file.
+PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_FOLDER = PROJECT_ROOT / "data"
 GROUND_TRUTH_TXT = PROJECT_ROOT / "evaluation_requirement" / "ground_truth.txt"
 RUN_ID = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -39,10 +39,10 @@ EXPORT_FOLDER = OUTPUT_ROOT / "videos"
 FIGURES_FOLDER = OUTPUT_ROOT / "figures"
 TABLES_FOLDER = OUTPUT_ROOT / "tables"
 
-# Model registry (task + raw tflite)
+# Model registry (task + raw tflite) – files live in the project root.
 MODEL_PATHS: Dict[str, Path] = {
-    "Pose Landmarker Lite (task)": ACTIVITY_DIR / "pose_landmarker_lite.task",
-    "Pose Landmarker Lite (tflite)": ACTIVITY_DIR / "pose_landmarker_lite.tflite",
+    "Pose Landmarker Lite (task)": PROJECT_ROOT / "pose_landmarker_lite.task",
+    "Pose Landmarker Lite (tflite)": PROJECT_ROOT / "pose_landmarker_lite.tflite",
 }
 
 # Pose topology for quick drawing (same as run_pose_tflite.py)
