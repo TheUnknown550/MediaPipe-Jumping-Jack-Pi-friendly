@@ -1,0 +1,9 @@
+mediapipe
+opencv-python
+numpy
+pandas
+matplotlib
+
+# Optional: required for quantize_fp16.py and quantize_int8.py
+tensorflow
+mediapipe-model-maker

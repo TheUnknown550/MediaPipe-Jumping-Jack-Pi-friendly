@@ -23,14 +23,14 @@ import numpy as np
 # -----------------------------
 # Paths & configuration
 # -----------------------------
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RUN_ID = datetime.now().strftime("%Y%m%d-%H%M%S")
 OUTPUT_ROOT = PROJECT_ROOT / "outputs" / f"mp_webcam_{RUN_ID}"
 EXPORT_FOLDER = OUTPUT_ROOT / "videos"
 TABLES_FOLDER = OUTPUT_ROOT / "tables"
 
 MODEL_PATHS: Dict[str, Path] = {
-    "Pose Landmarker Lite (task)": "pose_landmarker_lite.task",
+    "Pose Landmarker Lite (task)": PROJECT_ROOT / "models" / "pose_landmarker_lite.task",
 }
 
 # Simple pose topology for drawing
@@ -327,7 +327,9 @@ def pick_first_available_model() -> Tuple[str, Path]:
     for name, path in MODEL_PATHS.items():
         if path.exists():
             return name, path
-    raise FileNotFoundError("No pose model files found. Expected pose_landmarker_lite.task or pose_landmarker_lite.tflite in the project root.")
+    raise FileNotFoundError(
+        "No pose model files found. Expected pose_landmarker_lite.task or pose_landmarker_lite.tflite in the /models directory."
+    )
 
 
 def main():

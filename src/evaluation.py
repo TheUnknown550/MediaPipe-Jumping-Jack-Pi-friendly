@@ -29,20 +29,20 @@ import pandas as pd
 # -----------------------------
 # Paths & configuration
 # -----------------------------
-# All paths are rooted at the project folder that contains this file.
-PROJECT_ROOT = Path(__file__).resolve().parent
+# All paths are rooted at the repo folder (one level up from /src).
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_FOLDER = PROJECT_ROOT / "data"
-GROUND_TRUTH_TXT = PROJECT_ROOT / "evaluation_requirement" / "ground_truth.txt"
+GROUND_TRUTH_TXT = PROJECT_ROOT / "notebooks" / "ground_truth.txt"
 RUN_ID = datetime.now().strftime("%Y%m%d-%H%M%S")
 OUTPUT_ROOT = PROJECT_ROOT / "outputs" / f"mp_evaluation_{RUN_ID}"
 EXPORT_FOLDER = OUTPUT_ROOT / "videos"
 FIGURES_FOLDER = OUTPUT_ROOT / "figures"
 TABLES_FOLDER = OUTPUT_ROOT / "tables"
 
-# Model registry (task + raw tflite) – files live in the project root.
+# Model registry (task + raw tflite) - files live in /models.
 MODEL_PATHS: Dict[str, Path] = {
-    "Pose Landmarker Lite (task)": PROJECT_ROOT / "pose_landmarker_lite.task",
-    "Pose Landmarker Lite (tflite)": PROJECT_ROOT / "pose_landmarker_lite.tflite",
+    "Pose Landmarker Lite (task)": PROJECT_ROOT / "models" / "pose_landmarker_lite.task",
+    "Pose Landmarker Lite (tflite)": PROJECT_ROOT / "models" / "pose_landmarker_lite.tflite",
 }
 
 # Pose topology for quick drawing (same as run_pose_tflite.py)
@@ -500,3 +500,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

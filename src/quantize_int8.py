@@ -3,6 +3,8 @@ Full-integer (int8) post-training quantization for a TensorFlow SavedModel.
 Uses MediaPipe Model Maker's QuantizationConfig with a small representative
 image set to calibrate ranges.
 
+If --out is omitted, the quantized model is written to /models/pose_landmarker_int8.tflite.
+
 Example:
     python quantize_int8.py --saved_model path/to/saved_model \\
         --rep_data data/representative_frames \\
@@ -15,6 +17,10 @@ from typing import Iterable
 
 import tensorflow as tf
 from mediapipe_model_maker import quantization
+
+# Repository root (one level up from /src)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "models" / "pose_landmarker_int8.tflite"
 
 # Pose landmarker expects 256x256 input; override with --input_size if needed.
 DEFAULT_INPUT_SIZE = 256
@@ -122,7 +128,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--out",
-        default=Path("pose_landmarker_int8.tflite"),
+        default=DEFAULT_OUTPUT_PATH,
         type=Path,
         help="Where to write the int8 TFLite model.",
     )

@@ -2,6 +2,8 @@
 Float16 post-training quantization for a TensorFlow SavedModel using
 MediaPipe Model Maker's QuantizationConfig helper.
 
+Defaults to writing the model to /models/pose_landmarker_fp16.tflite when --out is omitted.
+
 Example:
     python quantize_fp16.py --saved_model path/to/saved_model \
         --out pose_landmarker_fp16.tflite
@@ -12,6 +14,10 @@ from pathlib import Path
 
 import tensorflow as tf
 from mediapipe_model_maker import quantization
+
+# Repository root (one level up from /src)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "models" / "pose_landmarker_fp16.tflite"
 
 
 def quantize(saved_model_dir: Path, output_path: Path) -> None:
@@ -36,7 +42,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--out",
-        default=Path("pose_landmarker_fp16.tflite"),
+        default=DEFAULT_OUTPUT_PATH,
         type=Path,
         help="Where to write the float16 TFLite model.",
     )

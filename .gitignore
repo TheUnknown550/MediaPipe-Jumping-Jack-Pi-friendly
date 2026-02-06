@@ -1,0 +1,19 @@
+# Virtual envs and caches
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Jupyter and IDE metadata
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# Outputs and logs
+outputs/
+*.log
+
+# OS cruft
+.DS_Store
+Thumbs.db

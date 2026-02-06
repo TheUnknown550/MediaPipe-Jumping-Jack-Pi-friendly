@@ -51,12 +51,15 @@ def draw_landmarks(frame, landmarks):
         cv2.circle(frame, pt, 4, (0, 0, 255), -1)
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
 def main():
-    model_path = Path("pose_landmarker_lite.tflite")
+    model_path = PROJECT_ROOT / "models" / "pose_landmarker_lite.tflite"
     if not model_path.exists():
         raise FileNotFoundError(
-            "pose_landmarker_lite.tflite not found. "
-            "Place it next to this script or update model_path."
+            f"pose_landmarker_lite.tflite not found in {model_path.parent}. "
+            "Download the MediaPipe model and place it in /models or update the path."
         )
 
     BaseOptions = mp.tasks.BaseOptions

@@ -1,14 +1,18 @@
+from pathlib import Path
+import time
+
 import cv2
 import mediapipe as mp
-import time
 import numpy as np
-
 from mediapipe.framework.formats import landmark_pb2
 
 # -----------------------------
 # 1) SETUP - Pose Landmarker
 # -----------------------------
-model_path = "pose_landmarker_lite.task"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+MODEL_PATH = PROJECT_ROOT / "models" / "pose_landmarker_lite.task"
+if not MODEL_PATH.exists():
+    raise FileNotFoundError(f"Model not found at {MODEL_PATH}. Run from repo root or adjust the path.")
 
 BaseOptions = mp.tasks.BaseOptions
 PoseLandmarker = mp.tasks.vision.PoseLandmarker
@@ -16,7 +20,7 @@ PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
 VisionRunningMode = mp.tasks.vision.RunningMode
 
 options = PoseLandmarkerOptions(
-    base_options=BaseOptions(model_asset_path=model_path),
+    base_options=BaseOptions(model_asset_path=str(MODEL_PATH)),
     running_mode=VisionRunningMode.VIDEO,
     num_poses=1,
     min_pose_detection_confidence=0.5,
